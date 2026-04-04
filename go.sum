@@ -2,8 +2,8 @@ github.com/gorilla/websocket v1.5.3 h1:saDtZ6Pbx/0u+bgYQ3q96pZgCzfhKXGPqt7kZ72aN
 github.com/gorilla/websocket v1.5.3/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/plexusone/omnivoice-core v0.6.0 h1:3Iy+tHsplFX5DlCi4ZrhEiesPptb7mF/uzT1DTD53BI=
 github.com/plexusone/omnivoice-core v0.6.0/go.mod h1:oFa3AOIKDv9lMd7M0cG1HBZOBKK6H9GAVhi7aiR9nYA=
-github.com/team-telnyx/telnyx-go/v4 v4.51.0 h1:gkXg5gro7RENPDatTOq9tYaTCQUcPXSClvk/c/Xvfwg=
-github.com/team-telnyx/telnyx-go/v4 v4.51.0/go.mod h1:4uju+AwUmHtyLj4hygaXLFQfO5dczJ3l+HA6NBBFshI=
+github.com/team-telnyx/telnyx-go/v4 v4.55.1 h1:eRRguvnsMWiZ/ClGldmx9Z10h1GpGKyO8yBPehR4dx4=
+github.com/team-telnyx/telnyx-go/v4 v4.55.1/go.mod h1:a8Z4CX3XKpxpziKboMKXe3Ds4hZ1ImAnZ1mQm5QxHyw=
 github.com/tidwall/gjson v1.14.2/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
 github.com/tidwall/gjson v1.18.0 h1:FIDeeyB800efLX89e5a8Y0BNH+LOngJyGrIWxG2FKQY=
 github.com/tidwall/gjson v1.18.0/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
