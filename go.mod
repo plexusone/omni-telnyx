@@ -4,7 +4,7 @@ go 1.24.11
 
 require (
 	github.com/gorilla/websocket v1.5.3
-	github.com/plexusone/omnivoice-core v0.6.0
+	github.com/plexusone/omnivoice-core v0.7.0
 	github.com/team-telnyx/telnyx-go/v4 v4.55.1
 )
 
