@@ -7,6 +7,20 @@
   "maintainers": ["johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.2.0",
+      "date": "2026-05-02",
+      "highlights": [
+        { "description": "Module rename from omnivoice-telnyx to omni-telnyx with package restructure" }
+      ],
+      "changed": [
+        { "description": "**Breaking**: Module path changed from `github.com/plexusone/omnivoice-telnyx` to `github.com/plexusone/omni-telnyx`", "commit": "fb4b28a" },
+        { "description": "**Breaking**: Packages moved to `omnivoice/` subdirectory: `omnivoice/callsystem`, `omnivoice/transport`", "commit": "fb4b28a" }
+      ],
+      "documentation": [
+        { "description": "Update README, CHANGELOG, and release notes for new module name and import paths", "commit": "f6c6f6c" }
+      ]
+    },
+    {
       "version": "v0.1.0",
       "date": "2026-03-22",
       "highlights": [
