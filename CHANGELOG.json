@@ -18,6 +18,9 @@
       ],
       "documentation": [
         { "description": "Update README, CHANGELOG, and release notes for new module name and import paths", "commit": "f6c6f6c" }
+      ],
+      "tests": [
+        { "description": "Conformance tests for callsystem and transport using `omnivoice-core/providertest`", "commit": "60f8ba0" }
       ]
     },
     {

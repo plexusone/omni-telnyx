@@ -45,11 +45,29 @@ omni-telnyx/
 ├── omnivoice/
 │   ├── callsystem/    # CallSystem and SMSProvider
 │   │   ├── provider.go
-│   │   └── call.go
+│   │   ├── call.go
+│   │   └── provider_conformance_test.go
 │   └── transport/     # Media Streaming transport
-│       └── provider.go
+│       ├── provider.go
+│       └── provider_conformance_test.go
 ├── go.mod
 └── README.md
+```
+
+## Tests
+
+Conformance tests using `omnivoice-core/providertest`:
+
+```bash
+# Run with integration tag (skips if no API key)
+go test -tags integration ./...
+
+# With environment variables for full integration
+export TELNYX_API_KEY="your-key"
+export TELNYX_PHONE_NUMBER="+15551234567"
+export TELNYX_TO_NUMBER="+15559876543"
+export TELNYX_CONNECTION_ID="your-connection-id"
+go test -tags integration ./...
 ```
 
 ## Related

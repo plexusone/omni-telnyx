@@ -242,11 +242,27 @@ Real-time bidirectional audio via WebSocket. Audio is base64-encoded mu-law or a
 - Public webhook URL for call events
 - WebSocket endpoint for Media Streaming
 
+## Testing
+
+Run conformance tests:
+
+```bash
+# Unit tests (no API key required)
+go test ./...
+
+# Integration tests (requires API key)
+export TELNYX_API_KEY="your-api-key"
+export TELNYX_PHONE_NUMBER="+15551234567"
+export TELNYX_TO_NUMBER="+15559876543"
+export TELNYX_CONNECTION_ID="your-connection-id"
+go test -tags integration ./...
+```
+
 ## Related Packages
 
 - [omnivoice-core](https://github.com/plexusone/omnivoice-core) - Core interfaces
-- [omnivoice-twilio](https://github.com/plexusone/omnivoice-twilio) - Twilio provider
-- [elevenlabs-go](https://github.com/plexusone/elevenlabs-go) - ElevenLabs SDK with OmniVoice provider at `elevenlabs-go/omnivoice`
+- [twilio-go](https://github.com/plexusone/twilio-go) - Twilio provider
+- [elevenlabs-go](https://github.com/plexusone/elevenlabs-go) - ElevenLabs SDK with OmniVoice provider
 
 ## License
 
