@@ -10,7 +10,7 @@ import (
 	"github.com/team-telnyx/telnyx-go/v4"
 	"github.com/team-telnyx/telnyx-go/v4/option"
 
-	"github.com/plexusone/omnivoice-telnyx/transport"
+	"github.com/plexusone/omni-telnyx/omnivoice/transport"
 )
 
 // Verify interface compliance at compile time.

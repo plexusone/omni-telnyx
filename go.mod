@@ -1,4 +1,4 @@
-module github.com/plexusone/omnivoice-telnyx
+module github.com/plexusone/omni-telnyx
 
 go 1.26.0
 
