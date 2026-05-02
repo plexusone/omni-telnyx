@@ -23,7 +23,7 @@
  [loc-svg]: https://tokei.rs/b1/github/plexusone/omni-telnyx
  [repo-url]: https://github.com/plexusone/omni-telnyx
  [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
- [license-url]: https://github.com/plexusone/omni-telnyx/blob/master/LICENSE
+ [license-url]: https://github.com/plexusone/omni-telnyx/blob/main/LICENSE
 
 Telnyx provider implementation for [OmniVoice](https://github.com/plexusone/omnivoice-core) - the voice abstraction layer for PlexusOne.
 
