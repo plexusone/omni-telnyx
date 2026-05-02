@@ -1,4 +1,4 @@
-# OmniVoice Telnyx Provider
+# Omni-Telnyx
 
 [![Go CI][go-ci-svg]][go-ci-url]
 [![Go Lint][go-lint-svg]][go-lint-url]
@@ -8,22 +8,22 @@
 [![Visualization][viz-svg]][viz-url]
 [![License][license-svg]][license-url]
 
- [go-ci-svg]: https://github.com/plexusone/omnivoice-telnyx/actions/workflows/go-ci.yaml/badge.svg?branch=main
- [go-ci-url]: https://github.com/plexusone/omnivoice-telnyx/actions/workflows/go-ci.yaml
- [go-lint-svg]: https://github.com/plexusone/omnivoice-telnyx/actions/workflows/go-lint.yaml/badge.svg?branch=main
- [go-lint-url]: https://github.com/plexusone/omnivoice-telnyx/actions/workflows/go-lint.yaml
- [go-sast-svg]: https://github.com/plexusone/omnivoice-telnyx/actions/workflows/go-sast-codeql.yaml/badge.svg?branch=main
- [go-sast-url]: https://github.com/plexusone/omnivoice-telnyx/actions/workflows/go-sast-codeql.yaml
- [goreport-svg]: https://goreportcard.com/badge/github.com/plexusone/omnivoice-telnyx
- [goreport-url]: https://goreportcard.com/report/github.com/plexusone/omnivoice-telnyx
- [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/plexusone/omnivoice-telnyx
- [docs-godoc-url]: https://pkg.go.dev/github.com/plexusone/omnivoice-telnyx
+ [go-ci-svg]: https://github.com/plexusone/omni-telnyx/actions/workflows/go-ci.yaml/badge.svg?branch=main
+ [go-ci-url]: https://github.com/plexusone/omni-telnyx/actions/workflows/go-ci.yaml
+ [go-lint-svg]: https://github.com/plexusone/omni-telnyx/actions/workflows/go-lint.yaml/badge.svg?branch=main
+ [go-lint-url]: https://github.com/plexusone/omni-telnyx/actions/workflows/go-lint.yaml
+ [go-sast-svg]: https://github.com/plexusone/omni-telnyx/actions/workflows/go-sast-codeql.yaml/badge.svg?branch=main
+ [go-sast-url]: https://github.com/plexusone/omni-telnyx/actions/workflows/go-sast-codeql.yaml
+ [goreport-svg]: https://goreportcard.com/badge/github.com/plexusone/omni-telnyx
+ [goreport-url]: https://goreportcard.com/report/github.com/plexusone/omni-telnyx
+ [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/plexusone/omni-telnyx
+ [docs-godoc-url]: https://pkg.go.dev/github.com/plexusone/omni-telnyx
  [viz-svg]: https://img.shields.io/badge/visualizaton-Go-blue.svg
- [viz-url]: https://mango-dune-07a8b7110.1.azurestaticapps.net/?repo=plexusone%2Fomnivoice-telnyx
- [loc-svg]: https://tokei.rs/b1/github/plexusone/omnivoice-telnyx
- [repo-url]: https://github.com/plexusone/omnivoice-telnyx
+ [viz-url]: https://mango-dune-07a8b7110.1.azurestaticapps.net/?repo=plexusone%2Fomni-telnyx
+ [loc-svg]: https://tokei.rs/b1/github/plexusone/omni-telnyx
+ [repo-url]: https://github.com/plexusone/omni-telnyx
  [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
- [license-url]: https://github.com/plexusone/omnivoice-telnyx/blob/master/LICENSE
+ [license-url]: https://github.com/plexusone/omni-telnyx/blob/master/LICENSE
 
 Telnyx provider implementation for [OmniVoice](https://github.com/plexusone/omnivoice-core) - the voice abstraction layer for PlexusOne.
 
@@ -37,7 +37,7 @@ Telnyx provider implementation for [OmniVoice](https://github.com/plexusone/omni
 ## Installation
 
 ```bash
-go get github.com/plexusone/omnivoice-telnyx
+go get github.com/plexusone/omni-telnyx
 ```
 
 ## Quick Start
@@ -52,7 +52,7 @@ import (
     "fmt"
     "log"
 
-    "github.com/plexusone/omnivoice-telnyx/callsystem"
+    "github.com/plexusone/omni-telnyx/omnivoice/callsystem"
 )
 
 func main() {
@@ -85,7 +85,7 @@ import (
     "net/http"
 
     "github.com/plexusone/omnivoice-core/callsystem"
-    telnyxcs "github.com/plexusone/omnivoice-telnyx/callsystem"
+    telnyxcs "github.com/plexusone/omni-telnyx/omnivoice/callsystem"
 )
 
 func main() {
@@ -114,7 +114,7 @@ func main() {
 ### Media Streaming
 
 ```go
-import "github.com/plexusone/omnivoice-telnyx/transport"
+import "github.com/plexusone/omni-telnyx/omnivoice/transport"
 
 // Create transport for Media Streaming
 tr, _ := transport.New()

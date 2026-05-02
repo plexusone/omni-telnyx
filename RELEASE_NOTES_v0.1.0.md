@@ -74,13 +74,13 @@ msg, _ = provider.SendSMSFrom(ctx, "+15559876543", "+15551234567", "Hello!")
 ## Getting Started
 
 ```bash
-go get github.com/plexusone/omnivoice-telnyx@v0.1.0
+go get github.com/plexusone/omni-telnyx@v0.1.0
 ```
 
 ```go
 import (
-    "github.com/plexusone/omnivoice-telnyx/callsystem"
-    "github.com/plexusone/omnivoice-telnyx/transport"
+    "github.com/plexusone/omni-telnyx/omnivoice/callsystem"
+    "github.com/plexusone/omni-telnyx/omnivoice/transport"
 )
 
 provider, err := callsystem.New(

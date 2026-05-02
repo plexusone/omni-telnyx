@@ -1,7 +1,7 @@
 {
   "irVersion": "1.0",
-  "project": "omnivoice-telnyx",
-  "repository": "https://github.com/plexusone/omnivoice-telnyx",
+  "project": "omni-telnyx",
+  "repository": "https://github.com/plexusone/omni-telnyx",
   "versioning": "semver",
   "commitConvention": "conventional",
   "maintainers": ["johncwang@gmail.com"],
