@@ -5,7 +5,7 @@ go 1.26.0
 require (
 	github.com/gorilla/websocket v1.5.3
 	github.com/plexusone/omnivoice-core v0.9.0
-	github.com/team-telnyx/telnyx-go/v4 v4.71.0
+	github.com/team-telnyx/telnyx-go/v4 v4.72.0
 )
 
 require (
