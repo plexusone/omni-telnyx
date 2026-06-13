@@ -91,6 +91,8 @@ github.com/plexusone/omni-google v0.4.1 h1:R5nhM//q422fW5a4Mx/WkFHsqEKLE44D4F1u3
 github.com/plexusone/omni-google v0.4.1/go.mod h1:tqJlGz5lUWjqfdF5vGt8mtxL06LKxsZcob5w+Z0Vx6A=
 github.com/plexusone/omni-openai v0.2.2 h1:FpJt924Ei07zJrudYW5+NOnmH/H6OR9wfAIXYYq7zzg=
 github.com/plexusone/omni-openai v0.2.2/go.mod h1:olpFz1Sl6TzC3tTN5pNyQyrCZ9/lxLEcUSoCefjL9Q8=
+github.com/plexusone/omnichat v0.6.1 h1:pZ49zqlpK1pRoyL41veLS9bqyZtIoi03/AM//WhGUYM=
+github.com/plexusone/omnichat v0.6.1/go.mod h1:y+LRm4DKa2dhwU5Kr3tUamXUpkC4s9AucuCwKqc3o6w=
 github.com/plexusone/omnillm v0.15.4 h1:Oun0iGqKIcISeTiaPePIezDdmID7wdblc8ZQgH/yWDw=
 github.com/plexusone/omnillm v0.15.4/go.mod h1:GPLckAxQkX/zCuNKw8vNlM649WGeFYXatuvNdzH0M/E=
 github.com/plexusone/omnillm-core v0.16.0 h1:ClEEAaAl/jgn0nV65azRAulEkLoMtCZqnWQBJCBH5eU=
