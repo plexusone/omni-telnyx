@@ -10,9 +10,13 @@
       "version": "v0.3.0",
       "date": "2026-06-13",
       "highlights": [
-        { "description": "Full voice gateway for Telnyx Media Streaming with STT→LLM→TTS pipeline" }
+        { "description": "Full voice gateway for Telnyx Media Streaming with STT→LLM→TTS pipeline" },
+        { "description": "MMS and RCS messaging support with OmniChat integration" }
       ],
       "added": [
+        { "description": "MMS support with media attachments via `SendMMS`, `SendMMSFrom`, and unified `SendMessage` API", "commit": "4dc06fa" },
+        { "description": "RCS support via Telnyx Messaging Profiles with automatic SMS fallback", "commit": "4dc06fa" },
+        { "description": "OmniChat provider implementing `provider.Provider` for SMS/MMS/RCS messaging integration", "commit": "4dc06fa" },
         { "description": "Voice gateway implementing `coregateway.Gateway` interface with HTTP/WebSocket server", "commit": "72c63bc" },
         { "description": "Session type implementing `coregateway.Session` interface with metrics tracking", "commit": "72c63bc" },
         { "description": "JSON webhook handlers for Telnyx call events (`call.initiated`, `call.answered`, `call.hangup`)", "commit": "72c63bc" },
