@@ -28,6 +28,7 @@
         { "description": "LLM tool calling with configurable handlers", "commit": "72c63bc" }
       ],
       "dependencies": [
+        { "description": "`github.com/plexusone/omnichat` v0.6.1 (new, for OmniChat provider)", "commit": "01634b6" },
         { "description": "`github.com/plexusone/omnivoice-core` v0.9.0 → v0.11.0 (registry support)", "commit": "581f6e9" },
         { "description": "`github.com/plexusone/omnillm` v0.15.4 (new, for LLM provider)", "commit": "581f6e9" },
         { "description": "`github.com/team-telnyx/telnyx-go/v4` v4.51.0 → v4.78.0", "commit": "4aad6f6" }
