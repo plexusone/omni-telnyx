@@ -279,29 +279,101 @@ func (p *Provider) SendSMS(ctx context.Context, to, body string) (*callsystem.SM
 
 // SendSMSFrom sends an SMS message from a specific phone number.
 func (p *Provider) SendSMSFrom(ctx context.Context, to, from, body string) (*callsystem.SMSMessage, error) {
+	return p.SendMessage(ctx, &SendMessageParams{
+		To:   to,
+		From: from,
+		Body: body,
+	})
+}
+
+// SendMessageParams are parameters for sending SMS, MMS, or RCS messages.
+type SendMessageParams struct {
+	To      string // Recipient phone number (E.164 format)
+	From    string // Sender phone number (E.164 format)
+	Body    string // Message body text
+	Subject string // Subject for MMS messages (optional)
+
+	// MMS fields
+	MediaURLs []string // URLs of media to attach (makes this an MMS)
+
+	// RCS fields (via Telnyx messaging profile)
+	MessagingProfileID string // Messaging profile ID for RCS/number pool
+}
+
+// SendMessage sends an SMS, MMS, or RCS message.
+// If MediaURLs are provided, the message becomes an MMS.
+// If MessagingProfileID is provided, the message uses that profile (for RCS or number pools).
+func (p *Provider) SendMessage(ctx context.Context, params *SendMessageParams) (*callsystem.SMSMessage, error) {
+	from := params.From
 	if from == "" {
 		from = p.defaultFrom
 	}
-	if from == "" {
-		return nil, fmt.Errorf("from number is required")
+	if from == "" && params.MessagingProfileID == "" {
+		return nil, fmt.Errorf("from number or messaging profile ID is required")
 	}
 
-	params := telnyx.MessageSendParams{
-		To:   to,
-		From: telnyx.String(from),
-		Text: telnyx.String(body),
+	telnyxParams := telnyx.MessageSendParams{
+		To: params.To,
 	}
 
-	response, err := p.client.Messages.Send(ctx, params)
+	// Set sender
+	if from != "" {
+		telnyxParams.From = telnyx.String(from)
+	}
+	if params.MessagingProfileID != "" {
+		telnyxParams.MessagingProfileID = telnyx.String(params.MessagingProfileID)
+	}
+
+	// Set body
+	if params.Body != "" {
+		telnyxParams.Text = telnyx.String(params.Body)
+	}
+
+	// MMS fields
+	if params.Subject != "" {
+		telnyxParams.Subject = telnyx.String(params.Subject)
+	}
+	if len(params.MediaURLs) > 0 {
+		telnyxParams.MediaURLs = params.MediaURLs
+	}
+
+	response, err := p.client.Messages.Send(ctx, telnyxParams)
 	if err != nil {
-		return nil, fmt.Errorf("failed to send SMS: %w", err)
+		msgType := p.messageType(params)
+		return nil, fmt.Errorf("failed to send %s: %w", msgType, err)
 	}
 
 	return &callsystem.SMSMessage{
 		ID:     response.Data.ID,
-		To:     to,
+		To:     params.To,
 		From:   from,
-		Body:   body,
+		Body:   params.Body,
 		Status: string(response.Data.Direction),
 	}, nil
+}
+
+// messageType returns a human-readable message type for error messages.
+func (p *Provider) messageType(params *SendMessageParams) string {
+	if params.MessagingProfileID != "" {
+		return "RCS"
+	}
+	if len(params.MediaURLs) > 0 {
+		return "MMS"
+	}
+	return "SMS"
+}
+
+// SendMMS sends an MMS message with media attachments.
+func (p *Provider) SendMMS(ctx context.Context, to, body string, mediaURLs []string) (*callsystem.SMSMessage, error) {
+	return p.SendMMSFrom(ctx, to, p.defaultFrom, body, mediaURLs)
+}
+
+// SendMMSFrom sends an MMS message from a specific phone number.
+func (p *Provider) SendMMSFrom(ctx context.Context, to, from, body string, mediaURLs []string) (*callsystem.SMSMessage, error) {
+	return p.SendMessage(ctx, &SendMessageParams{
+		To:        to,
+		From:      from,
+		Body:      body,
+		MediaURLs: mediaURLs,
+	})
 }
