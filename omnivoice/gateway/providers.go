@@ -7,13 +7,13 @@ import (
 	"os"
 	"strings"
 
+	omnillm "github.com/plexusone/omnillm-core"
+	"github.com/plexusone/omnillm-core/provider"
 	omnivoice "github.com/plexusone/omnivoice-core"
 	"github.com/plexusone/omnivoice-core/audio/codec"
 	"github.com/plexusone/omnivoice-core/registry"
 	"github.com/plexusone/omnivoice-core/stt"
 	"github.com/plexusone/omnivoice-core/tts"
-
-	"github.com/plexusone/omnillm"
 )
 
 // defaultSTTProvider wraps an omnivoice STT provider.
@@ -108,38 +108,65 @@ func (p *defaultSTTProvider) Transcribe(ctx context.Context, audio []byte) (stri
 	return result.Text, nil
 }
 
-// defaultLLMProvider wraps an omnillm chat client.
+// defaultLLMProvider wraps an omnillm provider.
 type defaultLLMProvider struct {
-	client       *omnillm.ChatClient
+	provider     provider.Provider
 	model        string
 	systemPrompt string
-	tools        []omnillm.Tool
+	tools        []provider.Tool
 	toolHandlers map[string]ToolHandler
 }
 
 func createLLMProvider(cfg Config) (LLMProvider, error) {
-	providerName := cfg.LLMProvider
-	if providerName == "" {
-		providerName = "openai" // Default
-	}
+	var llmProvider provider.Provider
 
-	apiKey := cfg.LLMAPIKey
-	if apiKey == "" {
-		// Try environment variables
-		switch providerName {
-		case "anthropic":
-			apiKey = os.Getenv("ANTHROPIC_API_KEY")
-		case "openai":
-			apiKey = os.Getenv("OPENAI_API_KEY")
+	// Use injected provider if available
+	if cfg.LLMClient != nil {
+		llmProvider = cfg.LLMClient
+	} else {
+		// Fall back to omnillm-core registry (thin providers)
+		providerName := cfg.LLMProvider
+		if providerName == "" {
+			providerName = "openai" // Default
 		}
-	}
 
-	if apiKey == "" {
-		return nil, fmt.Errorf("LLM provider %s requires API key (set %s_API_KEY)", providerName, strings.ToUpper(providerName))
+		apiKey := cfg.LLMAPIKey
+		if apiKey == "" {
+			// Try environment variables
+			switch providerName {
+			case "anthropic":
+				apiKey = os.Getenv("ANTHROPIC_API_KEY")
+			case "openai":
+				apiKey = os.Getenv("OPENAI_API_KEY")
+			}
+		}
+
+		if apiKey == "" {
+			return nil, fmt.Errorf("LLM provider %s requires API key (set %s_API_KEY)", providerName, strings.ToUpper(providerName))
+		}
+
+		// Get provider factory from omnillm-core registry
+		factory := omnillm.GetProviderFactory(omnillm.ProviderName(providerName))
+		if factory == nil {
+			return nil, fmt.Errorf("LLM provider %s not registered", providerName)
+		}
+
+		var err error
+		llmProvider, err = factory(omnillm.ProviderConfig{
+			Provider: omnillm.ProviderName(providerName),
+			APIKey:   apiKey,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("create LLM provider: %w", err)
+		}
 	}
 
 	model := cfg.LLMModel
 	if model == "" {
+		providerName := cfg.LLMProvider
+		if providerName == "" {
+			providerName = "openai"
+		}
 		switch providerName {
 		case "anthropic":
 			model = "claude-sonnet-4-20250514"
@@ -153,25 +180,12 @@ func createLLMProvider(cfg Config) (LLMProvider, error) {
 		systemPrompt = defaultSystemPrompt
 	}
 
-	// Create omnillm client
-	client, err := omnillm.NewClient(omnillm.ClientConfig{
-		Providers: []omnillm.ProviderConfig{
-			{
-				Provider: omnillm.ProviderName(providerName),
-				APIKey:   apiKey,
-			},
-		},
-	})
-	if err != nil {
-		return nil, fmt.Errorf("create LLM client: %w", err)
-	}
-
-	// Convert ToolDefinitions to omnillm.Tool format
-	var tools []omnillm.Tool
+	// Convert ToolDefinitions to provider.Tool format
+	var tools []provider.Tool
 	for _, td := range cfg.Tools {
-		tools = append(tools, omnillm.Tool{
+		tools = append(tools, provider.Tool{
 			Type: "function",
-			Function: omnillm.ToolSpec{
+			Function: provider.ToolSpec{
 				Name:        td.Name,
 				Description: td.Description,
 				Parameters:  td.Parameters,
@@ -180,7 +194,7 @@ func createLLMProvider(cfg Config) (LLMProvider, error) {
 	}
 
 	return &defaultLLMProvider{
-		client:       client,
+		provider:     llmProvider,
 		model:        model,
 		systemPrompt: systemPrompt,
 		tools:        tools,
@@ -190,36 +204,36 @@ func createLLMProvider(cfg Config) (LLMProvider, error) {
 
 func (p *defaultLLMProvider) Generate(ctx context.Context, input string, history []Turn) (string, []ToolCall, error) {
 	// Build messages
-	messages := make([]omnillm.Message, 0, len(history)+2)
+	messages := make([]provider.Message, 0, len(history)+2)
 
 	// Add system prompt
 	if p.systemPrompt != "" {
-		messages = append(messages, omnillm.Message{
-			Role:    omnillm.RoleSystem,
+		messages = append(messages, provider.Message{
+			Role:    provider.RoleSystem,
 			Content: p.systemPrompt,
 		})
 	}
 
 	// Add history
 	for _, turn := range history {
-		role := omnillm.RoleUser
+		role := provider.RoleUser
 		if turn.Role == "agent" {
-			role = omnillm.RoleAssistant
+			role = provider.RoleAssistant
 		}
-		messages = append(messages, omnillm.Message{
+		messages = append(messages, provider.Message{
 			Role:    role,
 			Content: turn.Text,
 		})
 	}
 
 	// Add current input
-	messages = append(messages, omnillm.Message{
-		Role:    omnillm.RoleUser,
+	messages = append(messages, provider.Message{
+		Role:    provider.RoleUser,
 		Content: input,
 	})
 
 	// Build request with tools if available
-	req := &omnillm.ChatCompletionRequest{
+	req := &provider.ChatCompletionRequest{
 		Model:    p.model,
 		Messages: messages,
 	}
@@ -230,7 +244,7 @@ func (p *defaultLLMProvider) Generate(ctx context.Context, input string, history
 	// Tool call loop - keep calling until we get a final response
 	const maxToolIterations = 10
 	for i := 0; i < maxToolIterations; i++ {
-		resp, err := p.client.CreateChatCompletion(ctx, req)
+		resp, err := p.provider.CreateChatCompletion(ctx, req)
 		if err != nil {
 			return "", nil, fmt.Errorf("LLM completion: %w", err)
 		}
@@ -275,8 +289,8 @@ func (p *defaultLLMProvider) Generate(ctx context.Context, input string, history
 
 				// Add tool result message
 				toolCallID := tc.ID
-				messages = append(messages, omnillm.Message{
-					Role:       omnillm.RoleTool,
+				messages = append(messages, provider.Message{
+					Role:       provider.RoleTool,
 					Content:    result,
 					ToolCallID: &toolCallID,
 				})

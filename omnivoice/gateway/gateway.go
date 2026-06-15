@@ -28,6 +28,7 @@ import (
 
 	"github.com/gorilla/websocket"
 
+	"github.com/plexusone/omnillm-core/provider"
 	coregateway "github.com/plexusone/omnivoice-core/gateway"
 
 	"github.com/plexusone/omni-telnyx/omnivoice/callsystem"
@@ -75,7 +76,10 @@ type Config struct {
 	PublicURL  string       // e.g., "https://your-server.com"
 	Listener   net.Listener // Optional external listener (e.g., ngrok)
 
-	// Voice pipeline configuration
+	// Pipeline mode: "text" (STT→LLM→TTS) or "realtime" (voice-to-voice)
+	Mode coregateway.PipelineMode
+
+	// Voice pipeline configuration (used when Mode == "text")
 	STTProvider string // e.g., "deepgram", "whisper"
 	STTAPIKey   string
 	STTModel    string
@@ -86,10 +90,20 @@ type Config struct {
 	TTSVoiceID  string
 	TTSModel    string
 
-	LLMProvider     string // e.g., "anthropic", "openai"
+	LLMProvider     string // e.g., "anthropic", "openai" (used with omnillm-core registry)
 	LLMAPIKey       string
 	LLMModel        string // e.g., "claude-sonnet-4-20250514"
 	LLMSystemPrompt string
+
+	// LLMClient is an optional pre-configured LLM provider.
+	// If provided, LLMProvider/LLMAPIKey are ignored and this client is used directly.
+	// This allows injecting thick providers (official SDKs) from the application.
+	LLMClient provider.Provider
+
+	// Realtime pipeline configuration (used when Mode == "realtime")
+	// Provide either RealtimeProvider directly or RealtimeConfig to create one.
+	RealtimeProvider coregateway.RealtimeProviderFactory
+	RealtimeConfig   *coregateway.RealtimeConfig
 
 	// Tools available to the LLM
 	Tools        []ToolDefinition
