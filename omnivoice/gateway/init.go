@@ -7,7 +7,9 @@ import (
 	"net"
 	"time"
 
+	"github.com/plexusone/omnillm-core/provider"
 	omnivoice "github.com/plexusone/omnivoice-core"
+	coregateway "github.com/plexusone/omnivoice-core/gateway"
 	"github.com/plexusone/omnivoice-core/registry"
 )
 
@@ -66,6 +68,11 @@ func NewGatewayProvider(cfg registry.ProviderConfig) (registry.Gateway, error) {
 		config.TTSModel = v
 	}
 
+	// Pipeline mode
+	if v := getExtString(cfg.Extensions, "mode"); v != "" {
+		config.Mode = coregateway.PipelineMode(v)
+	}
+
 	// LLM configuration
 	if v := getExtString(cfg.Extensions, "llmProvider"); v != "" {
 		config.LLMProvider = v
@@ -78,6 +85,19 @@ func NewGatewayProvider(cfg registry.ProviderConfig) (registry.Gateway, error) {
 	}
 	if v := getExtString(cfg.Extensions, "llmSystemPrompt"); v != "" {
 		config.LLMSystemPrompt = v
+	}
+
+	// LLM client injection (type-safe)
+	if v, ok := cfg.Extensions["llmClient"].(provider.Provider); ok {
+		config.LLMClient = v
+	}
+
+	// Realtime configuration (type-safe)
+	if v, ok := cfg.Extensions["realtimeProviderFactory"].(coregateway.RealtimeProviderFactory); ok {
+		config.RealtimeProvider = v
+	}
+	if v, ok := cfg.Extensions["realtimeConfig"].(*coregateway.RealtimeConfig); ok {
+		config.RealtimeConfig = v
 	}
 
 	// Tools configuration (type-safe)

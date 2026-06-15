@@ -1,6 +1,8 @@
 package gateway
 
 import (
+	"github.com/plexusone/omnillm-core/provider"
+	coregateway "github.com/plexusone/omnivoice-core/gateway"
 	"github.com/plexusone/omnivoice-core/registry"
 )
 
@@ -31,4 +33,20 @@ func WithToolHandler(name string, handler ToolHandler) registry.ProviderOption {
 		handlers[name] = handler
 		cfg.Extensions["toolHandlers"] = handlers
 	}
+}
+
+// WithLLMClient sets a pre-configured LLM provider.
+// This allows injecting thick providers (official SDKs) from the application.
+func WithLLMClient(client provider.Provider) registry.ProviderOption {
+	return registry.WithExtension("llmClient", client)
+}
+
+// WithRealtimeProviderFactory sets the realtime provider factory for voice-to-voice mode.
+func WithRealtimeProviderFactory(factory coregateway.RealtimeProviderFactory) registry.ProviderOption {
+	return registry.WithExtension("realtimeProviderFactory", factory)
+}
+
+// WithRealtimeConfig sets the realtime configuration for voice-to-voice mode.
+func WithRealtimeConfig(config *coregateway.RealtimeConfig) registry.ProviderOption {
+	return registry.WithExtension("realtimeConfig", config)
 }
