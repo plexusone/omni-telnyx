@@ -31,8 +31,9 @@ Telnyx provider implementation for [OmniVoice](https://github.com/plexusone/omni
 
 - 📞 **CallSystem**: PSTN call handling via Telnyx Call Control API
 - 📡 **Transport**: Telnyx Media Streaming for real-time audio
-- 🎙️ **Media Control**: Speak, PlayAudio, StartTranscription on active calls
-- 💬 **SMS**: Send SMS messages via SMSProvider interface
+- 🎙️ **Voice Gateway**: Full STT→LLM→TTS pipeline with registry integration
+- 🔌 **Provider Injection**: Inject your own LLM providers for full SDK access
+- 💬 **SMS/MMS/RCS**: Messaging via SMSProvider and OmniChat interfaces
 
 ## Installation
 
@@ -182,6 +183,49 @@ msg, err := provider.SendSMS(ctx, "+15559876543", "Hello from OmniVoice!")
 msg, err = provider.SendSMSFrom(ctx, "+15559876543", "+15551234567", "Hello!")
 
 fmt.Printf("Message sent: %s\n", msg.ID)
+```
+
+### Registry Integration
+
+Use omnivoice-core's provider registry for automatic discovery:
+
+```go
+import (
+    omnivoice "github.com/plexusone/omnivoice-core"
+    "github.com/plexusone/omnivoice-core/registry"
+    _ "github.com/plexusone/omni-telnyx/omnivoice/gateway" // Auto-register
+)
+
+// Get gateway via registry
+gw, err := omnivoice.GetGatewayProvider("telnyx",
+    registry.WithAPIKey("TELNYX_API_KEY"),
+    registry.WithExtension("phoneNumber", "+15551234567"),
+)
+```
+
+### LLM Client Injection
+
+Inject your own thick LLM provider instead of using the default:
+
+```go
+import (
+    "github.com/plexusone/omni-telnyx/omnivoice/gateway"
+    "github.com/plexusone/omnillm" // Your thick provider
+)
+
+// Create LLM client with full SDK access
+llmClient, _ := omnillm.NewClient(omnillm.ClientConfig{
+    Providers: []omnillm.ProviderConfig{{
+        Provider: "anthropic",
+        APIKey:   os.Getenv("ANTHROPIC_API_KEY"),
+    }},
+})
+
+// Inject into gateway config
+gw, err := gateway.New(gateway.Config{
+    APIKey:    "TELNYX_API_KEY",
+    LLMClient: llmClient,
+})
 ```
 
 ## Configuration
