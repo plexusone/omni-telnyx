@@ -7,6 +7,31 @@
   "maintainers": ["johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.4.0",
+      "date": "2026-06-15",
+      "highlights": [
+        { "description": "Migrate from thick `omnillm` to thin `omnillm-core` for lighter dependencies" },
+        { "description": "Add omnivoice-core registry integration for provider discovery" }
+      ],
+      "added": [
+        { "description": "Registry integration with omnivoice-core for automatic provider discovery via side-effect imports", "commit": "9e54f7a" },
+        { "description": "Type-safe registry options (`WithTools`, `WithToolHandlers`, `WithToolHandler`)", "commit": "38ec960" },
+        { "description": "LLM client injection via `Config.LLMClient` for thick provider support", "commit": "fcd0f5f" },
+        { "description": "Pipeline mode configuration (`Mode`, `RealtimeProvider`, `RealtimeConfig`)", "commit": "fcd0f5f" },
+        { "description": "Registry options for provider injection (`WithLLMClient`, `WithRealtimeProviderFactory`, `WithRealtimeConfig`)", "commit": "2891aa2" },
+        { "description": "Enhanced factory with typed extension handling for tools, handlers, and providers", "commit": "16ecdd9" }
+      ],
+      "changed": [
+        { "description": "Migrate from `omnillm` to `omnillm-core` - reduces indirect dependencies from 60+ to ~8 packages", "commit": "2345dbf" },
+        { "description": "LLM provider now uses `provider.Provider` interface instead of `*omnillm.ChatClient`", "commit": "fcd0f5f" }
+      ],
+      "dependencies": [
+        { "description": "`github.com/plexusone/omnillm-core` v0.17.0 (replaces omnillm)", "commit": "2345dbf" },
+        { "description": "`github.com/plexusone/omnivoice-core` v0.13.0 → v0.14.0", "commit": "d6f48d1" },
+        { "description": "Removed `github.com/plexusone/omnillm` v0.15.5", "commit": "2345dbf" }
+      ]
+    },
+    {
       "version": "v0.3.0",
       "date": "2026-06-13",
       "highlights": [
