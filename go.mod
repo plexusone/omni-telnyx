@@ -10,6 +10,8 @@ require (
 	github.com/team-telnyx/telnyx-go/v4 v4.78.0
 )
 
+replace github.com/plexusone/omnivoice-core => ../omnivoice-core
+
 require (
 	cloud.google.com/go v0.123.0 // indirect
 	cloud.google.com/go/auth v0.20.0 // indirect
