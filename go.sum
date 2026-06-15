@@ -97,8 +97,8 @@ github.com/plexusone/omnillm v0.15.4 h1:Oun0iGqKIcISeTiaPePIezDdmID7wdblc8ZQgH/y
 github.com/plexusone/omnillm v0.15.4/go.mod h1:GPLckAxQkX/zCuNKw8vNlM649WGeFYXatuvNdzH0M/E=
 github.com/plexusone/omnillm-core v0.16.0 h1:ClEEAaAl/jgn0nV65azRAulEkLoMtCZqnWQBJCBH5eU=
 github.com/plexusone/omnillm-core v0.16.0/go.mod h1:0KzNniPwHXVtfRgfyD3fAlaj8RDktQwRrxEFQrXbLtE=
-github.com/plexusone/omnivoice-core v0.11.0 h1:zjMLD6a9970313G3G3oE56ZovLCQC891NsUd5THhNcE=
-github.com/plexusone/omnivoice-core v0.11.0/go.mod h1:ghbU63vSkn09vz1Mb9uQrePVcNLpXXBB9IMZ2wkzePM=
+github.com/plexusone/omnivoice-core v0.13.0 h1:JMncJ79Qh9wIM0coUb+6M/1sV42QGs442xIacLaIIqY=
+github.com/plexusone/omnivoice-core v0.13.0/go.mod h1:ghbU63vSkn09vz1Mb9uQrePVcNLpXXBB9IMZ2wkzePM=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rogpeppe/go-internal v1.14.1 h1:UQB4HGPB6osV0SQTLymcB4TgvyWu6ZyliaW0tI/otEQ=
