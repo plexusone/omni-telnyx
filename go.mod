@@ -7,7 +7,7 @@ require (
 	github.com/plexusone/omnichat v0.8.0
 	github.com/plexusone/omnillm-core v0.17.0
 	github.com/plexusone/omnivoice-core v0.14.0
-	github.com/team-telnyx/telnyx-go/v4 v4.78.0
+	github.com/team-telnyx/telnyx-go/v4 v4.80.0
 )
 
 require (
