@@ -8,8 +8,8 @@ github.com/plexusone/omnichat v0.8.1 h1:KSkLSc1FKmzuXez60hnHE96fu8wDcg9oXIe43Prn
 github.com/plexusone/omnichat v0.8.1/go.mod h1:Ok5Y8xAgH/hH/18Ewg+uyeZV1XgRiqorfhowetwjumY=
 github.com/plexusone/omnillm-core v0.18.0 h1:JnONiIe08W+83hsyxyFHSouk0jkBY2o7/SzvJxF3mYI=
 github.com/plexusone/omnillm-core v0.18.0/go.mod h1:180U/oa67fly3+T3h1sL/pBMvcjIKR+bvSEkAGnalMY=
-github.com/plexusone/omnivoice-core v0.15.0 h1:lvzucRbP53bwzBhbZ/x15iRUfJexJqzEeLJvXo74GRM=
-github.com/plexusone/omnivoice-core v0.15.0/go.mod h1:SwFSgk9D1UH9XIyofLUU6BEEWEtHsS+PHKduMp+VucE=
+github.com/plexusone/omnivoice-core v0.16.0 h1:vLpIuuhSFhznO62TOCgD/6hZ401D636Sfqs8GTLGcBo=
+github.com/plexusone/omnivoice-core v0.16.0/go.mod h1:o89lRE0JT1/cXcgvdhkobLesyK5RDwCMJwhAPO6ZbtA=
 github.com/team-telnyx/telnyx-go/v4 v4.91.0 h1:oKhCXPjpSKqFoBF30F4TTIcJdbPKd9ndBzTWKhuGhQA=
 github.com/team-telnyx/telnyx-go/v4 v4.91.0/go.mod h1:a8Z4CX3XKpxpziKboMKXe3Ds4hZ1ImAnZ1mQm5QxHyw=
 github.com/tidwall/gjson v1.14.2/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
