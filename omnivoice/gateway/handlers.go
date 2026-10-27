@@ -40,6 +40,9 @@ type webhookEvent struct {
 	} `json:"meta"`
 }
 
+// directionOutgoing is the Telnyx webhook direction for calls placed by MakeCall.
+const directionOutgoing = "outgoing"
+
 // handleInboundCall handles incoming Telnyx webhook for new calls.
 // Telnyx sends JSON payloads to webhooks, unlike Twilio's form data.
 func (g *Gateway) handleInboundCall(w http.ResponseWriter, r *http.Request) {
@@ -104,6 +107,13 @@ func (g *Gateway) handleCallInitiated(w http.ResponseWriter, payload struct {
 	from := payload.From
 	to := payload.To
 	direction := payload.Direction
+
+	// Outbound calls are registered by MakeCall; call.initiated for them must
+	// not be treated as a new inbound call to accept and answer.
+	if direction == directionOutgoing {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
 
 	// Create session
 	session := g.createSession(callControlID, from, to, direction)
