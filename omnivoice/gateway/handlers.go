@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	coregateway "github.com/plexusone/omnivoice-core/gateway"
+
 	telnyxcall "github.com/plexusone/omni-telnyx/omnivoice/callsystem"
 )
 
@@ -221,7 +223,14 @@ func (g *Gateway) handleCallAnswered(w http.ResponseWriter, payload struct {
 		g.logger.Error("failed to send keypad digits", "error", err, "call_id", callControlID)
 	}
 
-	if err := telnyxCall.StartMediaStreaming(ctx, wsURL); err != nil {
+	// Audio mode sends mu-law back over the stream, so ask Telnyx for PCMU
+	// RTP rather than its MP3 default.
+	var streamOpts []telnyxcall.StreamingOption
+	if g.config.Mode == coregateway.PipelineModeAudio {
+		streamOpts = append(streamOpts, telnyxcall.WithBidirectionalPCMU())
+	}
+
+	if err := telnyxCall.StartMediaStreaming(ctx, wsURL, streamOpts...); err != nil {
 		g.logger.Error("failed to start media streaming", "error", err, "call_id", callControlID)
 		w.WriteHeader(http.StatusOK)
 		return

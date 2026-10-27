@@ -31,6 +31,12 @@ type Session struct {
 	metrics    coregateway.Metrics
 	closed     bool
 	closeOnce  sync.Once
+
+	// audioRecv carries remote audio in PipelineModeAudio; nil otherwise.
+	// runAudioPassthrough closes it once it has started forwarding,
+	// otherwise Close does.
+	audioRecv       chan []byte
+	audioForwarding bool
 }
 
 // ID returns the session identifier (call control ID).
@@ -122,6 +128,9 @@ func (s *Session) Close() error {
 	s.closeOnce.Do(func() {
 		s.mu.Lock()
 		s.closed = true
+		if s.audioRecv != nil && !s.audioForwarding {
+			close(s.audioRecv)
+		}
 		s.mu.Unlock()
 
 		close(s.done)
@@ -151,6 +160,14 @@ func (s *Session) Close() error {
 
 // startPipeline starts the voice processing pipeline.
 func (s *Session) startPipeline(conn *mediaStreamConn) {
+	// Audio mode: hand the call's audio to the application
+	if s.gateway.config.Mode == coregateway.PipelineModeAudio {
+		ctx, cancel := context.WithTimeout(context.Background(), s.gateway.config.MaxSessionDuration)
+		defer cancel()
+		s.runAudioPassthrough(ctx, conn)
+		return
+	}
+
 	s.mu.Lock()
 	s.conn = conn
 	s.mu.Unlock()

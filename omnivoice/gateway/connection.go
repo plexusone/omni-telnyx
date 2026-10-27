@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"sync"
+	"sync/atomic"
 
 	"github.com/gorilla/websocket"
 )
@@ -30,6 +31,14 @@ type mediaStreamConn struct {
 	// writeMu serializes WebSocket writes, which gorilla/websocket does not
 	// allow concurrently.
 	writeMu sync.Mutex
+
+	// sequence numbers outbound media frames across all senders.
+	sequence atomic.Int64
+}
+
+// nextSequence returns the sequence number for the next outbound media frame.
+func (c *mediaStreamConn) nextSequence() int64 {
+	return c.sequence.Add(1)
 }
 
 // Telnyx Media Streaming message types.
@@ -199,14 +208,12 @@ func (c *mediaStreamConn) readLoop() {
 
 // writeLoop writes audio to the WebSocket.
 func (c *mediaStreamConn) writeLoop() {
-	seqNum := int64(0)
 	for {
 		select {
 		case <-c.done:
 			return
 		case audio := <-c.audioOut:
-			seqNum++
-			if err := c.sendAudio(audio, seqNum); err != nil {
+			if err := c.sendAudio(audio, c.nextSequence()); err != nil {
 				c.gateway.logger.Debug("failed to send audio", "error", err)
 				return
 			}
