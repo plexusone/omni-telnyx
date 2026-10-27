@@ -7,6 +7,36 @@
   "maintainers": ["johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.5.0",
+      "date": "2026-10-27",
+      "highlights": [
+        { "description": "Keypad digits (DTMF) on answered outbound calls, for example to join a meeting's phone dial-in line" },
+        { "description": "Fix the gateway treating its own outbound calls as incoming calls" }
+      ],
+      "added": [
+        { "description": "`MakeCall` honors `callsystem.WithSendDigits`, sending the digits with `send_dtmf` when the call is answered", "commit": "975bd7b" },
+        { "description": "`Call.SendPendingDigits` sends pending digits once, with a command ID to ignore retried webhooks", "commit": "975bd7b" },
+        { "description": "Gateway `MakeCallWithOptions` implementing omnivoice-core `gateway.OptionCaller`", "commit": "975bd7b" }
+      ],
+      "fixed": [
+        { "description": "Gateway ignores `call.initiated` for outgoing calls instead of running the incoming call handler and answering them", "commit": "152d7be" }
+      ],
+      "tests": [
+        { "description": "Unit tests against a fake Telnyx API for sending digits once, calls without digits, and invalid digits", "commit": "975bd7b" },
+        { "description": "Unit test that outgoing `call.initiated` does not reach the incoming call handler", "commit": "152d7be" }
+      ],
+      "documentation": [
+        { "description": "README section on sending keypad digits on outbound calls", "commit": "435cfc6" },
+        { "description": "v0.5.0 release notes at `docs/releases/v0.5.0.md`" }
+      ],
+      "dependencies": [
+        { "description": "Update `github.com/plexusone/omnivoice-core` from v0.14.0 to v0.17.0", "commit": "d92123c" },
+        { "description": "Update `github.com/team-telnyx/telnyx-go/v4` from v4.78.0 to v4.104.0", "commit": "1c3d8d1" },
+        { "description": "Update `github.com/plexusone/omnillm-core` from v0.17.0 to v0.18.1", "commit": "fb705ff" },
+        { "description": "Update `github.com/plexusone/omnichat` from v0.8.0 to v0.8.1 and Go from 1.26.0 to 1.26.4", "commit": "cc9545f" }
+      ]
+    },
+    {
       "version": "v0.4.0",
       "date": "2026-06-15",
       "highlights": [
