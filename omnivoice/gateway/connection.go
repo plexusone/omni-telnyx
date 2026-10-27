@@ -26,6 +26,10 @@ type mediaStreamConn struct {
 	mu        sync.RWMutex
 	closed    bool
 	closeOnce sync.Once
+
+	// writeMu serializes WebSocket writes, which gorilla/websocket does not
+	// allow concurrently.
+	writeMu sync.Mutex
 }
 
 // Telnyx Media Streaming message types.
@@ -234,6 +238,8 @@ func (c *mediaStreamConn) sendAudio(audio []byte, seqNum int64) error {
 		},
 	}
 
+	c.writeMu.Lock()
+	defer c.writeMu.Unlock()
 	return c.wsConn.WriteJSON(msg)
 }
 
@@ -257,6 +263,8 @@ func (c *mediaStreamConn) sendMark(name string) error {
 		},
 	}
 
+	c.writeMu.Lock()
+	defer c.writeMu.Unlock()
 	return c.wsConn.WriteJSON(msg)
 }
 
@@ -275,6 +283,8 @@ func (c *mediaStreamConn) clear() error {
 		"stream_id": streamID,
 	}
 
+	c.writeMu.Lock()
+	defer c.writeMu.Unlock()
 	return c.wsConn.WriteJSON(msg)
 }
 
