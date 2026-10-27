@@ -194,13 +194,30 @@ func (c *Call) SendPendingDigits(ctx context.Context) error {
 	return nil
 }
 
+// StreamingOption configures StartMediaStreaming.
+type StreamingOption func(*telnyx.CallActionStartStreamingParams)
+
+// WithBidirectionalPCMU accepts mu-law (PCMU) RTP payloads sent back over the
+// media stream and plays them into the call. Without it, Telnyx expects audio
+// sent back over the stream to be MP3.
+func WithBidirectionalPCMU() StreamingOption {
+	return func(p *telnyx.CallActionStartStreamingParams) {
+		p.StreamBidirectionalMode = telnyx.StreamBidirectionalModeRtp
+		p.StreamBidirectionalCodec = telnyx.StreamBidirectionalCodecPcmu
+	}
+}
+
 // StartMediaStreaming initiates media streaming for the call.
 // This sends the streaming:start command to enable real-time audio.
-func (c *Call) StartMediaStreaming(ctx context.Context, streamURL string) error {
-	_, err := c.provider.client.Calls.Actions.StartStreaming(ctx, c.id, telnyx.CallActionStartStreamingParams{
+func (c *Call) StartMediaStreaming(ctx context.Context, streamURL string, opts ...StreamingOption) error {
+	params := telnyx.CallActionStartStreamingParams{
 		StreamURL:   telnyx.String(streamURL),
 		StreamTrack: telnyx.CallActionStartStreamingParamsStreamTrackInboundTrack,
-	})
+	}
+	for _, opt := range opts {
+		opt(&params)
+	}
+	_, err := c.provider.client.Calls.Actions.StartStreaming(ctx, c.id, params)
 	return err
 }
 
