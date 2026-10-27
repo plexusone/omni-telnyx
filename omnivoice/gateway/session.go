@@ -2,9 +2,12 @@ package gateway
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"sync"
 	"time"
+
+	"github.com/team-telnyx/telnyx-go/v4"
 
 	coregateway "github.com/plexusone/omnivoice-core/gateway"
 )
@@ -121,6 +124,17 @@ func (s *Session) Interrupt() {
 	s.mu.Lock()
 	s.metrics.InterruptionCount++
 	s.mu.Unlock()
+}
+
+// Hangup ends the call and closes the session. Close alone only stops the
+// session's media stream, which leaves a Telnyx call connected; Hangup also
+// tells Telnyx to end the call.
+func (s *Session) Hangup(ctx context.Context) error {
+	_, err := s.gateway.callSystem.Client().Calls.Actions.Hangup(ctx, s.id, telnyx.CallActionHangupParams{})
+	if err != nil {
+		return fmt.Errorf("hang up call %s: %w", s.id, err)
+	}
+	return s.Close()
 }
 
 // Close ends the session.
