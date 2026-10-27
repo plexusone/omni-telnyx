@@ -137,6 +137,10 @@ func (p *Provider) MakeCall(ctx context.Context, to string, opts ...callsystem.C
 		opt(callOpts)
 	}
 
+	if err := callsystem.ValidateSendDigits(callOpts.SendDigits); err != nil {
+		return nil, err
+	}
+
 	from := callOpts.From
 	if from == "" {
 		from = p.defaultFrom
@@ -175,6 +179,7 @@ func (p *Provider) MakeCall(ctx context.Context, to string, opts ...callsystem.C
 	}
 
 	call := newCall(response.Data.CallControlID, from, to, callsystem.Outbound, p)
+	call.sendDigits = callOpts.SendDigits
 
 	p.mu.Lock()
 	p.calls[call.id] = call

@@ -215,6 +215,12 @@ func (g *Gateway) handleCallAnswered(w http.ResponseWriter, payload struct {
 		return
 	}
 
+	// Enter any keypad digits from MakeCall (for example a meeting ID and
+	// passcode). A failure is logged and streaming still starts.
+	if err := telnyxCall.SendPendingDigits(ctx); err != nil {
+		g.logger.Error("failed to send keypad digits", "error", err, "call_id", callControlID)
+	}
+
 	if err := telnyxCall.StartMediaStreaming(ctx, wsURL); err != nil {
 		g.logger.Error("failed to start media streaming", "error", err, "call_id", callControlID)
 		w.WriteHeader(http.StatusOK)

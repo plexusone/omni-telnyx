@@ -2,6 +2,7 @@ package callsystem
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
@@ -27,6 +28,10 @@ type Call struct {
 	mu        sync.RWMutex
 	transport omnitransport.Connection
 	agent     agent.Session
+
+	// sendDigits holds keypad tones from callsystem.WithSendDigits that are
+	// sent once the call is answered. Cleared after they are sent.
+	sendDigits string
 }
 
 // newCall creates a new Call instance.
@@ -161,6 +166,32 @@ func (c *Call) handleEvent(eventType string) {
 	case "call.machine.detection.ended":
 		// Machine detection completed, call may still be active
 	}
+}
+
+// SendPendingDigits sends the keypad tones given to MakeCall with
+// callsystem.WithSendDigits, once. Call it when the call is answered (the
+// gateway does this on the call.answered webhook). It does nothing when there
+// are no pending digits or they were already sent.
+func (c *Call) SendPendingDigits(ctx context.Context) error {
+	c.mu.Lock()
+	digits := c.sendDigits
+	c.sendDigits = ""
+	c.mu.Unlock()
+
+	if digits == "" {
+		return nil
+	}
+
+	_, err := c.provider.client.Calls.Actions.SendDtmf(ctx, c.id, telnyx.CallActionSendDtmfParams{
+		Digits: digits,
+		// Telnyx ignores repeated commands with the same ID on a call, so a
+		// retried webhook cannot enter the digits twice.
+		CommandID: telnyx.String("send-digits-" + c.id),
+	})
+	if err != nil {
+		return fmt.Errorf("send digits: %w", err)
+	}
+	return nil
 }
 
 // StartMediaStreaming initiates media streaming for the call.
