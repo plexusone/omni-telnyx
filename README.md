@@ -162,6 +162,32 @@ for conn := range connCh {
 }
 ```
 
+### Audio Mode (Raw Call Audio)
+
+By default the gateway runs a voice pipeline (STT, LLM, TTS) on every call. Set `Mode: coregateway.PipelineModeAudio` (from `github.com/plexusone/omnivoice-core/gateway`) to run no pipeline and handle the call's audio yourself, for example to record a call or to build an agent that attends a meeting by phone and speaks only when addressed:
+
+```go
+sess, err := gw.MakeCallWithOptions(ctx, "+16695550100")
+if err != nil {
+    return err
+}
+audio := sess.(coregateway.AudioSession)
+
+go func() {
+    for chunk := range audio.ReceiveAudio() { // mu-law (PCMU), 8 kHz, mono
+        recorder.Write(chunk)
+    }
+}()
+
+if err := audio.SendAudio(mulawSpeech); err != nil {
+    return err
+}
+```
+
+In audio mode the gateway starts Media Streaming with bidirectional PCMU RTP, so audio sent with `SendAudio` plays on the call. `ReceiveAudio` carries the remote party's audio and is closed when the media stream stops. `SendAudio` returns `ErrAudioNotConnected` before the stream connects and `ErrSessionClosed` after the call ends; `ClearAudio` stops audio that has not played yet.
+
+When you use the call system without the gateway, pass `callsystem.WithBidirectionalPCMU()` to `StartMediaStreaming` to send mu-law audio back over the stream.
+
 ### Call Control Features
 
 ```go
