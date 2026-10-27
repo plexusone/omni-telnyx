@@ -7,6 +7,38 @@
   "maintainers": ["johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.6.0",
+      "date": "2026-10-27",
+      "highlights": [
+        { "description": "Audio pipeline mode: the gateway hands raw call audio to the application instead of running STT, LLM, and TTS" },
+        { "description": "Streaming options for `StartMediaStreaming`, including bidirectional PCMU RTP" }
+      ],
+      "added": [
+        { "description": "`StreamingOption` and `WithBidirectionalPCMU` for `StartMediaStreaming`", "commit": "719c4ba" },
+        { "description": "Audio pipeline mode: with `Mode` set to `PipelineModeAudio`, sessions implement omnivoice-core `gateway.AudioSession` (`AudioFormat`, `ReceiveAudio`, `SendAudio`, `ClearAudio`)", "commit": "34c7a60" },
+        { "description": "Audio mode starts Media Streaming with bidirectional PCMU RTP and ends the session when the stream stops", "commit": "34c7a60" }
+      ],
+      "changed": [
+        { "description": "`(*callsystem.Call).StartMediaStreaming` takes variadic `...StreamingOption`; existing calls compile unchanged", "commit": "719c4ba" },
+        { "description": "Outbound media frames share one sequence counter per stream", "commit": "34c7a60" }
+      ],
+      "fixed": [
+        { "description": "Serialize Media Streaming WebSocket writes, which gorilla/websocket does not allow concurrently", "commit": "c23e9dc" },
+        { "description": "Drop session events emitted after the session closes instead of panicking on a closed channel", "commit": "c23e9dc" }
+      ],
+      "tests": [
+        { "description": "Unit tests driving the media stream handler with simulated Telnyx messages in audio mode", "commit": "34c7a60" },
+        { "description": "Unit tests against a fake Call Control API for the streaming request in audio and text modes", "commit": "34c7a60" }
+      ],
+      "documentation": [
+        { "description": "README section on audio mode", "commit": "c4fea92" },
+        { "description": "v0.6.0 release notes at `docs/releases/v0.6.0.md`" }
+      ],
+      "dependencies": [
+        { "description": "Update `github.com/plexusone/omnivoice-core` from v0.17.0 to v0.18.1", "commit": "7b57f57" }
+      ]
+    },
+    {
       "version": "v0.5.0",
       "date": "2026-10-27",
       "highlights": [
