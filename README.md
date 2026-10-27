@@ -184,7 +184,7 @@ if err := audio.SendAudio(mulawSpeech); err != nil {
 }
 ```
 
-In audio mode the gateway starts Media Streaming with bidirectional PCMU RTP, so audio sent with `SendAudio` plays on the call. `ReceiveAudio` carries the remote party's audio and is closed when the media stream stops. `SendAudio` returns `ErrAudioNotConnected` before the stream connects and `ErrSessionClosed` after the call ends; `ClearAudio` stops audio that has not played yet.
+In audio mode the gateway starts Media Streaming with bidirectional PCMU RTP, so audio sent with `SendAudio` plays on the call. `ReceiveAudio` carries the remote party's audio and is closed when the media stream stops. To end the call, call `Hangup(ctx)` on the session: `Close` stops only the media stream and leaves a Telnyx call connected. `SendAudio` returns `ErrAudioNotConnected` before the stream connects and `ErrSessionClosed` after the call ends; `ClearAudio` stops audio that has not played yet.
 
 When you use the call system without the gateway, pass `callsystem.WithBidirectionalPCMU()` to `StartMediaStreaming` to send mu-law audio back over the stream.
 
