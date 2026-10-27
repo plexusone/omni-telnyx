@@ -76,6 +76,24 @@ func main() {
 }
 ```
 
+### Sending Keypad Digits
+
+To send keypad tones (DTMF) once an outbound call is answered, for example to join a meeting's phone dial-in line, pass `WithSendDigits` from omnivoice-core's `callsystem` package:
+
+```go
+import corecallsystem "github.com/plexusone/omnivoice-core/callsystem"
+
+// Wait 4 seconds, enter the meeting ID and #, wait 8 seconds, then enter
+// * and the passcode and #.
+call, err := provider.MakeCall(ctx, "+16695550100",
+    corecallsystem.WithSendDigits("WWWW85012345678#WWWWWWWW*482913#"),
+)
+```
+
+Digits use dial-string notation: `0`-`9`, `*`, `#`, and `A`-`D` are tones, `w` waits half a second, and `W` waits one second. Invalid digits return an error before the call is placed.
+
+The digits are sent with Telnyx's `send_dtmf` command when the call is answered. The voice gateway does this on the `call.answered` webhook; when you use the call system without the gateway, call `SendPendingDigits` on the `*callsystem.Call` when you receive `call.answered`. Digits are sent once per call. Through the gateway, use `gw.MakeCallWithOptions(ctx, to, opts...)`.
+
 ### Handling Incoming Calls
 
 ```go
